@@ -2,6 +2,9 @@
 
 # Do incremental backups of folders to dropbox
 # include mysql database ( specify names in the conf file)
+
+# store the script in '/root/backup_script/'
+# replace 'your_dropbox_app_folder' with the name of the folder you created in the Dropbox app
 import os
 import ConfigParser
 import datetime
@@ -19,7 +22,7 @@ def get_line_count(fname):
     return i + 1
 
 conf = ConfigParser.ConfigParser()
-conf.read('/root/mansoor/backup/back.conf')
+conf.read('/root/backup_script/python_incremental_dropbox.conf')
 folders = conf.get('backup_folders','backup_folders')
 temp_dir = conf.get('temp','temp_dir')
 retention = conf.get('retention','retention')
@@ -43,7 +46,7 @@ location = location + " /tmp/databases/"
 print "Creating the backup archive..!"
 os.system("tar -czvf %s/%s.tar.gz %s"  % (temp_dir, current_time, location) )
 print "Archive created successfully"
-os.system("echo %s >> /root/mansoor/backup/backup_history" %(current_time))
+os.system("echo %s >> /root/backup_script/backup_history" %(current_time))
 
 backup_file = "%s/%s.tar.gz" %(temp_dir, current_time)
 destination = "%s.tar.gz" %(current_time)
@@ -52,28 +55,28 @@ print "The payload is:", backup_file
 print "The destination is gonna be: ", destination
 print "Sending files to dropbox"
 f = open(backup_file, 'rb')
-response = dbx.put_file('/digitz.org_backups/' + destination, f)
+response = dbx.put_file('/your_dropbox_app_folder/' + destination, f)
 
 print "Response: ", response
 # Retention
 head = ''
-total_backups = get_line_count('/root/mansoor/backup/backup_history')
+total_backups = get_line_count('/root/backup_script/backup_history')
 print "Checking retention"
 print "There are %s backups | retention is %s" %(total_backups, retention)
 diff = int(total_backups) - int(retention)
 if diff > 0 :
     # Delete diff number of folders from the top of the file backup_history
     print "There are files to be deleted in the destination"
-    with open("/root/mansoor/backup/backup_history") as f:
+    with open("/root/backup_script/backup_history") as f:
         head = [next(f) for x in xrange(diff)]
 
 # delete everything in head
 if head:
 	for folder in head:
-	    os.system("sed -i '1d' /root/mansoor/backup/backup_history")
+	    os.system("sed -i '1d' /root/backup_script/backup_history")
 	    print "Deleting ", folder
 	    folder = folder.rstrip('\n')
-	    dbx.file_delete('/digitz.org_backups/' + folder + '.tar.gz')
+	    dbx.file_delete('/your_dropbox_app_folder' + folder + '.tar.gz')
 	    print "Deleted successfully"
 
 #cleaning up
