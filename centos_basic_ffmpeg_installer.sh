@@ -126,7 +126,7 @@ function install {
 	# VP8/VP9 video encoder.
 	echo "Installing VP8/VP9 video encoder.."
 	cd ~/ffmpeg_sources
-	git clone --depth 1 https://chromium.googlesource.com/webm/libvpx.git
+	git clone --depth 1 https://github.com/webmproject/libvpx.git
 	cd libvpx
 	./configure --prefix="$HOME/ffmpeg_build" --disable-examples
 	make
