@@ -183,7 +183,7 @@ function update {
 
 	# Update libfdk_aac
 	echo "Updating libfdk_aac.."
-	cd ~/ffmpeg_sources/fdk_aac
+	cd ~/ffmpeg_sources/fdk-aac
 	make distclean
 	git pull
 	./configure --prefix="$HOME/ffmpeg_build" --disable-shared
