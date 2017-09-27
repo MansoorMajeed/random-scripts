@@ -29,6 +29,11 @@ Choose an option below:
 function install {
 
 	echo "Installing dependencies..!"
+	if [ ! -f "/etc/yum.repo.d/nasm.repo" ]
+	 then
+		cd /etc/yum.repo.d/
+		wget http://nasm.us/nasm.repo
+	 fi
 	 yum install autoconf automake cmake freetype-devel gcc gcc-c++ git libtool make mercurial nasm pkgconfig zlib-devel -y
 
 	 mkdir ~/ffmpeg_sources
