@@ -1,2 +1,2 @@
-# my-scripts
-Here, the scripts I created for my personal use. Will update soon.
+# Random scripts
+Some scripts you may or may not find useful. Hoping to update repository soon enough
